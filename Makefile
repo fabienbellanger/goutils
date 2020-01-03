@@ -22,9 +22,6 @@ update:
 update-all:
 	$(GOGET) -u all && $(GOMOD) tidy
 
-build: 
-	$(GOBUILD) -o $(BINARY_NAME) -v
-
 test: 
 	$(GOTEST) -cover ./...
 
