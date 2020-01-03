@@ -1,4 +1,4 @@
-package array
+package goutils
 
 import (
 	"reflect"

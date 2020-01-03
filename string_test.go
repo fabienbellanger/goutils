@@ -1,4 +1,4 @@
-package string
+package goutils
 
 import (
 	"testing"

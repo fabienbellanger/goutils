@@ -1,4 +1,4 @@
-package http
+package goutils
 
 // HTTPResponse type
 type HTTPResponse struct {
