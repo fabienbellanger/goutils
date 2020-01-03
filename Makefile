@@ -2,14 +2,11 @@
 GOCMD=go
 GOINSTALL=$(GOCMD) install
 GORUN=$(GOCMD) run
-GOBUILD=$(GOCMD) build
 GOCLEAN=$(GOCMD) clean
 GOTEST=$(GOCMD) test
 GOGET=$(GOCMD) get
 GOMOD=$(GOCMD) mod
 GOTOOL=$(GOCMD) tool
-BINARY_NAME=go-release
-BINARY_UNIX=$(BINARY_NAME)_unix
 
 all: test
 
@@ -53,5 +50,3 @@ bench:
 
 clean: 
 	$(GOCLEAN)
-	rm -f $(BINARY_NAME)
-	rm -f $(BINARY_UNIX)
