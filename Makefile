@@ -10,21 +10,6 @@ GOMOD=$(GOCMD) mod
 GOTOOL=$(GOCMD) tool
 BINARY_NAME=go-release
 BINARY_UNIX=$(BINARY_NAME)_unix
-DOCKER_COMPOSE=docker-compose
-
-dc-up:
-	$(DOCKER_COMPOSE) up -d
-dc-down:
-	$(DOCKER_COMPOSE) down
-
-dc-stop:
-	$(DOCKER_COMPOSE) stop
-
-dc-restart:
-	$(DOCKER_COMPOSE) restart
-
-dc-build:
-	$(DOCKER_COMPOSE) build
 
 all: test build
 
