@@ -11,7 +11,7 @@ GOTOOL=$(GOCMD) tool
 BINARY_NAME=go-release
 BINARY_UNIX=$(BINARY_NAME)_unix
 
-all: test build
+all: test
 
 install:
 	$(GOINSTALL) ./...
@@ -55,7 +55,3 @@ clean:
 	$(GOCLEAN)
 	rm -f $(BINARY_NAME)
 	rm -f $(BINARY_UNIX)
-
-run-prod:
-	$(GOBUILD) -o $(BINARY_NAME) -v
-	./$(BINARY_NAME)
