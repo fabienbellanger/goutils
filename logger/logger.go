@@ -1,11 +1,12 @@
 package logger
 
 import (
-	"github.com/fabienbellanger/goutils"
 	"io"
 	"log"
 	"os"
 	"time"
+
+	"github.com/fabienbellanger/goutils"
 )
 
 // DefaultWriter defines the writer for logs.
