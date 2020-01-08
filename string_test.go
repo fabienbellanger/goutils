@@ -2,28 +2,21 @@ package goutils
 
 import (
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
-// TestUcfirst
+// TestUcfirst tests Ucfirst function.
 func TestUcfirst(t *testing.T) {
-	s1 := "test chaîne Avec et sans majuscule"
-	s1u := Ucfirst(s1)
+	actual := "Test chaîne Avec et sans majuscule"
+	expected := Ucfirst("test chaîne Avec et sans majuscule")
+	assert.Equal(t, expected, actual)
 
-	if s1u != "Test chaîne Avec et sans majuscule" {
-		t.Errorf("Ucfirst - got: %q, want: %q.", s1u, "Test chaîne Avec et sans majuscule")
-	}
+	actual = "Test chaîne Avec et sans majuscule"
+	expected = Ucfirst("Test chaîne Avec et sans majuscule")
+	assert.Equal(t, expected, actual)
 
-	s2 := "Test chaîne Avec et sans majuscule"
-	s2u := Ucfirst(s2)
-
-	if s2u != "Test chaîne Avec et sans majuscule" {
-		t.Errorf("Ucfirst - got: %q, want: %q.", s2u, "Test chaîne Avec et sans majuscule")
-	}
-
-	s3 := "été"
-	s3u := Ucfirst(s3)
-
-	if s3u != "Été" {
-		t.Errorf("Ucfirst - got: %q, want: %q.", s3u, "Été")
-	}
+	actual = "Été"
+	expected = Ucfirst("été")
+	assert.Equal(t, expected, actual)
 }

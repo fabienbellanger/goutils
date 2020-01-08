@@ -2,45 +2,28 @@ package goutils
 
 import (
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
-// TestGetHTTPInternalServerError
+// TestGetHTTPInternalServerError tests HTTP response.
 func TestGetHTTPResponse(t *testing.T) {
-	response := GetHTTPResponse(200, "Success", nil)
-	responseValid := HTTPResponse{200, "Success", nil}
+	actual := HTTPResponse{200, "Success", nil}
+	expected := GetHTTPResponse(200, "Success", nil)
+	assert.Equal(t, expected, actual)
 
-	if response != responseValid {
-		t.Errorf("GetHTTPResponse - got: %+v, want: %+v.", response, responseValid)
-	}
-
-	response = GetHTTPResponse(404, "Not found", 15)
-	responseValid = HTTPResponse{404, "Not found", 15}
-
-	if response != responseValid {
-		t.Errorf("GetHTTPResponse - got: %+v, want: %+v.", response, responseValid)
-	}
+	actual = HTTPResponse{404, "Not found", 15}
+	expected = GetHTTPResponse(404, "Not found", 15)
+	assert.Equal(t, expected, actual)
 }
 
-// BenchmarkGetHTTPResponse
-func BenchmarkGetHTTPResponse(b *testing.B) {
-	for n := 0; n < b.N; n++ {
-		GetHTTPResponse(200, "Success", nil)
-	}
-}
-
-// TestGetHTTPInternalServerError
+// TestGetHTTPInternalServerError tests HTTP internal server error response.
 func TestGetHTTPInternalServerError(t *testing.T) {
-	response := GetHTTPInternalServerError("Database Error")
-	responseValid := HTTPResponse{500, "Database Error", nil}
+	actual := HTTPResponse{500, "Database Error", nil}
+	expected := GetHTTPInternalServerError("Database Error")
+	assert.Equal(t, expected, actual)
 
-	if response != responseValid {
-		t.Errorf("GetHTTPInternalServerError - got: %+v, want: %+v.", response, responseValid)
-	}
-
-	response = GetHTTPInternalServerError("")
-	responseValid = HTTPResponse{500, "Internal Server Error", nil}
-
-	if response != responseValid {
-		t.Errorf("GetHTTPInternalServerError - got: %+v, want: %+v.", response, responseValid)
-	}
+	actual = HTTPResponse{500, "Internal Server Error", nil}
+	expected = GetHTTPInternalServerError("")
+	assert.Equal(t, expected, actual)
 }

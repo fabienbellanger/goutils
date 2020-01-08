@@ -2,40 +2,30 @@ package goutils
 
 import (
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 // TestSubPath tests with correct parameters.
 func TestSubPath(t *testing.T) {
-	path := "/home/toto/project/dir/file.go"
-	pattern := "project"
-	get := SubPath(path, pattern)
-	wanted := "dir/file.go"
+	actual := SubPath("/home/toto/project/dir/file.go", "project")
+	expected := "dir/file.go"
 
-	if get != wanted {
-		t.Errorf("SubPath with many patterns - get: %v, want: %v\n", get, wanted)
-	}
+	assert.Equal(t, expected, actual)
 }
 
 // TestSubPathManyPatterns tests with correct parameters.
 func TestSubPathManyPatterns(t *testing.T) {
-	path := "/home/toto/project/project/dir/file.go"
-	pattern := "project"
-	get := SubPath(path, pattern)
-	wanted := "dir/file.go"
+	actual := SubPath("/home/toto/project/project/dir/file.go", "project")
+	expected := "dir/file.go"
 
-	if get != wanted {
-		t.Errorf("SubPath with many patterns - get: %v, want: %v\n", get, wanted)
-	}
+	assert.Equal(t, expected, actual)
 }
 
 // TestSubPathEmptyPattern tests with correct parameters.
 func TestSubPathEmptyPattern(t *testing.T) {
-	path := "/home/toto/project/dir/file.go"
-	pattern := ""
-	get := SubPath(path, pattern)
-	wanted := "/home/toto/project/dir/file.go"
+	actual := SubPath("/home/toto/project/dir/file.go", "")
+	expected := "/home/toto/project/dir/file.go"
 
-	if get != wanted {
-		t.Errorf("SubPath with empty pattern - get: %v, want: %v\n", get, wanted)
-	}
+	assert.Equal(t, expected, actual)
 }
