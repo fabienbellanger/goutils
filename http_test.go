@@ -27,3 +27,12 @@ func TestGetHTTPInternalServerError(t *testing.T) {
 	expected = GetHTTPInternalServerError("")
 	assert.Equal(t, expected, actual)
 }
+
+// TestGetHTTPStatusMessage tests HTTP status message from code.
+func TestGetHTTPStatusMessage(t *testing.T) {
+	assert.Equal(t, GetHTTPStatusMessage(200), "OK")
+	assert.Equal(t, GetHTTPStatusMessage(400), "Bad Request")
+	assert.Equal(t, GetHTTPStatusMessage(500), "Internal Server Error")
+	assert.Equal(t, GetHTTPStatusMessage(0), "")
+	assert.Equal(t, GetHTTPStatusMessage(8930), "")
+}
