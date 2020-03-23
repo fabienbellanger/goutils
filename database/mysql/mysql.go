@@ -80,15 +80,7 @@ func Insert(query string, args ...interface{}) (int64, error) {
 		return 0, err
 	}
 
-	if err != nil {
-		return 0, err
-	}
-
 	id, err := result.LastInsertId()
-	if err != nil {
-		return 0, err
-	}
-
 	if err != nil {
 		return 0, err
 	}
@@ -103,15 +95,7 @@ func Update(query string, args ...interface{}) (int64, error) {
 		return 0, err
 	}
 
-	if err != nil {
-		return 0, err
-	}
-
 	affect, err := result.RowsAffected()
-	if err != nil {
-		return 0, err
-	}
-
 	if err != nil {
 		return 0, err
 	}
@@ -126,15 +110,7 @@ func Delete(query string, args ...interface{}) (int64, error) {
 		return 0, err
 	}
 
-	if err != nil {
-		return 0, err
-	}
-
 	affect, err := result.RowsAffected()
-	if err != nil {
-		return 0, err
-	}
-
 	if err != nil {
 		return 0, err
 	}
