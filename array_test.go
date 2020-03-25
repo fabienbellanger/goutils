@@ -1,6 +1,7 @@
 package goutils
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -71,4 +72,21 @@ func TestStringInSlice(t *testing.T) {
 
 	assert.True(t, StringInSlice("four", a))
 	assert.False(t, StringInSlice("seven", a))
+}
+
+func ExampleStringInSlice() {
+	ok := StringInSlice("Coucou", []string{"Coucou", "Hello"})
+	fmt.Println(ok)
+	// Output:
+	// true
+}
+
+func ExampleStringSliceDiff() {
+	a := []string{"one", "two", "three", "four", "five", "six"}
+	b := []string{"two", "seven", "four", "six"}
+	diff := StringSliceDiff(a, b)
+
+	fmt.Printf("diff: %v\n", diff)
+	// Output:
+	// [one three five]
 }
