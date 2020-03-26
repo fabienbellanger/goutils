@@ -88,5 +88,5 @@ func ExampleStringSliceDiff() {
 
 	fmt.Printf("diff: %v\n", diff)
 	// Output:
-	// [one three five]
+	// diff: [one three five]
 }
