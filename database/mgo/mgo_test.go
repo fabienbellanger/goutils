@@ -4,10 +4,10 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"log"
 	"testing"
 	"time"
 
-	"github.com/prometheus/common/log"
 	"github.com/stretchr/testify/assert"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -118,11 +118,11 @@ func ExampleOpen() {
 	// -------------------
 	err := Open("host", 10, "username", "password", "name", uint64(50), 10*time.Second, 10*time.Second, 10*time.Second)
 	if err != nil {
-		log.Errorf("Database connection failed: %v\n", err)
+		log.Fatalf("Database connection failed: %v\n", err)
 	}
 	defer func() {
 		if err = DBInstance.Client.Disconnect(DBInstance.Context); err != nil {
-			log.Errorf("Database disconnection failed: %v\n", err)
+			log.Fatalf("Database disconnection failed: %v\n", err)
 		}
 	}()
 
