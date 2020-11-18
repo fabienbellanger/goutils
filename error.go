@@ -5,7 +5,7 @@ import (
 	"os"
 	"strconv"
 
-	"github.com/logrusorgru/aurora"
+	"github.com/logrusorgru/aurora/v3"
 )
 
 // color enables colors in console.
