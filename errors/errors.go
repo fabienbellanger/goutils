@@ -7,79 +7,73 @@ import (
 	"strings"
 )
 
-// Link represents an error
-type Link struct {
-	// Code uint   `json:"code"`  // Error code
-	// Msg  string `json:"msg"`   // Error message
-	// File string `json:"file"`  // Context file name
-	// Line uint   `json:"line"`  // Context line number
-	Err  error `json:"error"` // Error
-	Next *Link `json:"next"`  // Next errors
+type link struct {
+	// code       uint
+	// msg        string
+	// fileName   string
+	// lineNumber uint
+	err  error
+	next *link
 }
 
-// ErrorChain chains multiple errors
+// ErrorChain will chain multiple errors
 type ErrorChain struct {
-	List *Link `json:"list"`
-	Last *Link `json:"last"`
+	head *link
+	tail *link
 }
 
 // New create a new error chain
 func New() *ErrorChain {
 	return &ErrorChain{}
 }
-
-// TODO: Improve output
 func (e *ErrorChain) Error() string {
 	errs := []string{}
-	h := e.List
+	h := e.head
 	for h != nil {
-		errs = append(errs, h.Err.Error())
-		h = h.Next
+		errs = append(errs, h.err.Error())
+		h = h.next
 	}
 	return strings.Join(errs, ": ")
 }
 
-// Unwrap gives the next error
+// Unwrap will give the next error
 func (e *ErrorChain) Unwrap() error {
-	if e.List.Next == nil {
+	if e.head.next == nil {
 		return nil
 	}
 	ec := &ErrorChain{
-		List: e.List.Next,
-		Last: e.Last,
+		head: e.head.next,
+		tail: e.tail,
 	}
 	return ec
 }
 
-// Is compares to the target
+// Is will comapre the target
 func (e *ErrorChain) Is(target error) bool {
-	return errors.Is(e.List.Err, target)
+	return errors.Is(e.head.err, target)
 }
 
 // Add will place another error in the chain
-func (e *ErrorChain) Add(err error, code uint, msg string) {
-	l := &Link{
-		// Code: code,
-		// Msg:  msg,
-		Err: err,
+func (e *ErrorChain) Add(err error) {
+	l := &link{
+		err: err,
 	}
-	if e.List == nil {
-		e.List = l
-		e.Last = l
+	if e.head == nil {
+		e.head = l
+		e.tail = l
 		return
 	}
-
-	e.Last.Next = l
-	e.Last = l
+	e.tail.next = l
+	e.tail = l
 }
 
-// Errors returns the errors in the chain
+// Errors will return the errors in the chain
 func (e *ErrorChain) Errors() []error {
 	errs := []error{}
-	l := e.List
+	l := e.head
 	for l != nil {
-		errs = append(errs, l.Err)
-		l = l.Next
+		errs = append(errs, l.err)
+		l = l.next
 	}
 	return errs
 }
