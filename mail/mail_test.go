@@ -1,7 +1,10 @@
 package mail
 
 import (
+	"bytes"
+	"encoding/base64"
 	"fmt"
+	"os"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -35,7 +38,7 @@ func TestBuildMessageWithoutFrom(t *testing.T) {
 		To: make([]string, 1),
 	}
 
-	_, err := mail.buildMessage()
+	err := mail.buildMessage()
 
 	assert.NotNil(t, err)
 }
@@ -46,44 +49,81 @@ func TestBuildMessageWithoutTo(t *testing.T) {
 		From: "bob@alice.test",
 	}
 
-	_, err := mail.buildMessage()
+	err := mail.buildMessage()
 
 	assert.NotNil(t, err)
 }
 
 // TestBuildMessage tests BuildMessage with good parameters.
 func TestBuildMessage(t *testing.T) {
-	to := make([]string, 2)
-	to[0] = "alice@bob.test"
-	to[1] = "john@doe.test"
-	mail := Mail{
-		From:    "bob@alice.test",
-		To:      to,
-		Subject: "Test",
-		Body:    "Body",
+	mail := Mail{}
+	mail.From = "hugo.le-guen@apitic.com"
+	mail.To = []string{"hugo.le-guen@apitic.com"}
+	mail.Cc = []string{"copy1@gmail.com"}
+	mail.Subject = "test"
+	mail.Body = "ghbzuhgzughzeughzuighzeughzughzugzhughzughzguzhguzih"
+	mail.Attachments = []string{"image.jpg"}
+	got := mail.buildMessage()
+
+	// This is the separator used for the various parts of the MIME message structure.
+	bPlaceholder := "our-custom-separator"
+
+	// Create a buffer for the MIME message.
+	mime := bytes.NewBuffer(nil)
+
+	// Construct the main MIME headers.
+	mime.WriteString("From: hugo.le-guen@apitic.com\r\n")
+	mime.WriteString("To: hugo.le-guen@apitic.com\r\n")
+
+	if len(mail.Cc) > 0 {
+		mime.WriteString("Cc: copy1@gmail.com\r\n")
 	}
 
-	got, _ := mail.buildMessage()
-	wanted := fmt.Sprint("From: bob@alice.test\r\n")
-	wanted += fmt.Sprint("To: alice@bob.test,john@doe.test\r\n")
-	wanted += fmt.Sprint("Subject: Test\r\n")
-	wanted += fmt.Sprint("MIME-version: 1.0\r\n")
-	wanted += fmt.Sprint("Content-Type: text/html; charset: UTF-8\r\n")
-	wanted += fmt.Sprint("\r\nBody")
+	mime.WriteString("Subject: test\r\n")
+	mime.WriteString(fmt.Sprintf("MIME-Version: 1.0\r\n"))
+	mime.WriteString(fmt.Sprintf("Content-Type: multipart/mixed; boundary=%s\r\n\r\n", bPlaceholder))
+
+	// Add the message body.
+	mime.WriteString(fmt.Sprintf("--%s\r\n", bPlaceholder))
+	mime.WriteString("Content-Type: text/plain; charset=utf-8\r\n\r\n")
+	mime.WriteString("ghbzuhgzughzeughzuighzeughzughzugzhughzughzguzhguzih")
+	mime.WriteString("\r\n")
+
+	// Attach files from the filesystem.
+	for _, file := range mail.Attachments {
+		mime.WriteString(fmt.Sprintf("--%s\r\n", bPlaceholder))
+		mime.WriteString(fmt.Sprintf("Content-Type: application/octet-stream\r\n"))
+		mime.WriteString("Content-Description: image.jpg\r\n")
+		mime.WriteString(fmt.Sprintf("Content-Transfer-Encoding: base64\r\n"))
+		mime.WriteString("Content-Disposition: attachment; filename=\"image.jpg\"\r\n\r\n")
+
+		fileContent, _ := os.ReadFile(file)
+
+		b := make([]byte, base64.StdEncoding.EncodedLen(len(fileContent)))
+		base64.StdEncoding.Encode(b, fileContent)
+		mime.Write(b)
+		mime.WriteString("\r\n")
+	}
+
+	// End of the message.
+	mime.WriteString(fmt.Sprintf("--%s--\r\n", bPlaceholder))
+
+	wanted := mime.Bytes()
 
 	assert.Equal(t, got, wanted)
 }
 
 // TestSend tests mail send construction.
 func TestSend(t *testing.T) {
-	err := Send("from", []string{"test@example.com"}, "subject", "body", "smptUser", "smtpPassword", "smtpHost", 1234)
+	err := Send("from", []string{"test@example.com"}, []string{"test2@example.com"}, []string{"image.jpg"}, "subject", "body", "smptUser", "smtpPassword", "smtpHost", 1234)
 
 	assert.NotNil(t, err)
 }
 
 // TestSendMail tests mail send.
 func TestSendMail(t *testing.T) {
-	err := sendMail(Mail{}, "message", "", 1234)
+	mail := Mail{}
+	err := sendMail(mail, mail.buildMessage(), "", 1234)
 
 	assert.NotNil(t, err)
 }
