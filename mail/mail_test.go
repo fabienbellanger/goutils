@@ -57,12 +57,12 @@ func TestBuildMessageWithoutTo(t *testing.T) {
 // TestBuildMessage tests BuildMessage with good parameters.
 func TestBuildMessage(t *testing.T) {
 	mail := Mail{}
-	mail.From = "hugo.le-guen@apitic.com"
-	mail.To = []string{"hugo.le-guen@apitic.com"}
+	mail.From = "john.doe@test.com"
+	mail.To = []string{"john.doe@test.com"}
 	mail.Cc = []string{"copy1@gmail.com"}
 	mail.Subject = "test"
 	mail.Body = "ghbzuhgzughzeughzuighzeughzughzugzhughzughzguzhguzih"
-	mail.Attachments = []string{"image.jpg"}
+	mail.Attachments = []string{"../resources/tests/image.jpg"}
 	got := mail.buildMessage()
 
 	// This is the separator used for the various parts of the MIME message structure.
@@ -72,15 +72,15 @@ func TestBuildMessage(t *testing.T) {
 	mime := bytes.NewBuffer(nil)
 
 	// Construct the main MIME headers.
-	mime.WriteString("From: hugo.le-guen@apitic.com\r\n")
-	mime.WriteString("To: hugo.le-guen@apitic.com\r\n")
+	mime.WriteString("From: john.doe@test.com\r\n")
+	mime.WriteString("To: john.doe@test.com\r\n")
 
 	if len(mail.Cc) > 0 {
 		mime.WriteString("Cc: copy1@gmail.com\r\n")
 	}
 
 	mime.WriteString("Subject: test\r\n")
-	mime.WriteString(fmt.Sprintf("MIME-Version: 1.0\r\n"))
+	mime.WriteString("MIME-Version: 1.0\r\n")
 	mime.WriteString(fmt.Sprintf("Content-Type: multipart/mixed; boundary=%s\r\n\r\n", bPlaceholder))
 
 	// Add the message body.
@@ -92,9 +92,9 @@ func TestBuildMessage(t *testing.T) {
 	// Attach files from the filesystem.
 	for _, file := range mail.Attachments {
 		mime.WriteString(fmt.Sprintf("--%s\r\n", bPlaceholder))
-		mime.WriteString(fmt.Sprintf("Content-Type: application/octet-stream\r\n"))
+		mime.WriteString("Content-Type: application/octet-stream\r\n")
 		mime.WriteString("Content-Description: image.jpg\r\n")
-		mime.WriteString(fmt.Sprintf("Content-Transfer-Encoding: base64\r\n"))
+		mime.WriteString("Content-Transfer-Encoding: base64\r\n")
 		mime.WriteString("Content-Disposition: attachment; filename=\"image.jpg\"\r\n\r\n")
 
 		fileContent, _ := os.ReadFile(file)

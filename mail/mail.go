@@ -81,7 +81,7 @@ func (mail *Mail) buildMessage() []byte {
 	}
 
 	mime.WriteString(fmt.Sprintf("Subject: %s\r\n", mail.Subject))
-	mime.WriteString(fmt.Sprintf("MIME-Version: 1.0\r\n"))
+	mime.WriteString("MIME-Version: 1.0\r\n")
 	mime.WriteString(fmt.Sprintf("Content-Type: multipart/mixed; boundary=%s\r\n\r\n", bPlaceholder))
 
 	// Add the message body.
@@ -94,9 +94,9 @@ func (mail *Mail) buildMessage() []byte {
 	for _, file := range mail.Attachments {
 		_, filename := filepath.Split(file)
 		mime.WriteString(fmt.Sprintf("--%s\r\n", bPlaceholder))
-		mime.WriteString(fmt.Sprintf("Content-Type: application/octet-stream\r\n"))
+		mime.WriteString("Content-Type: application/octet-stream\r\n")
 		mime.WriteString(fmt.Sprintf("Content-Description: %s\r\n", filename))
-		mime.WriteString(fmt.Sprintf("Content-Transfer-Encoding: base64\r\n"))
+		mime.WriteString("Content-Transfer-Encoding: base64\r\n")
 		mime.WriteString(fmt.Sprintf("Content-Disposition: attachment; filename=\"%s\"\r\n\r\n", filename))
 
 		fileContent, err := os.ReadFile(file)
@@ -150,14 +150,3 @@ func sendMail(mail Mail, msg []byte, smtpHost string, smtpPort int) error {
 
 	return c.Quit()
 }
-
-/*func main() {
-	from := "hugo.le-guen@apitic.com"
-	to := []string{"hugo.le-guen@apitic.com"}
-	cc := []string{"copy1@gmail.com", "copy2@gmail.com"}
-	subject := "test"
-	body := "ghbzuhgzughzeughzuighzeughzughzugzhughzughzguzhguzih"
-	attachments := []string{"image.jpg"}
-
-	Send(from, to, cc, attachments, subject, body, "", "", "localhost", 1025)
-}*/
