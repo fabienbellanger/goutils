@@ -86,7 +86,7 @@ func (mail *Mail) buildMessage() []byte {
 
 	// Add the message body.
 	mime.WriteString(fmt.Sprintf("--%s\r\n", bPlaceholder))
-	mime.WriteString("Content-Type: text/plain; charset=utf-8\r\n\r\n")
+	mime.WriteString("Content-Type: text/html; charset=utf-8\r\n\r\n")
 	mime.WriteString(mail.Body)
 	mime.WriteString("\r\n")
 
